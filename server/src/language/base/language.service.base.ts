@@ -10,7 +10,7 @@ https://docs.amplication.com/docs/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "nestjs-prisma";
-import { Prisma, Language } from "@prisma/client";
+import { Prisma, Language, User } from "@prisma/client";
 
 export class LanguageServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -45,5 +45,13 @@ export class LanguageServiceBase {
     args: Prisma.SelectSubset<T, Prisma.LanguageDeleteArgs>
   ): Promise<Language> {
     return this.prisma.language.delete(args);
+  }
+
+  async getName(parentId: string): Promise<User | null> {
+    return this.prisma.language
+      .findUnique({
+        where: { id: parentId },
+      })
+      .name();
   }
 }

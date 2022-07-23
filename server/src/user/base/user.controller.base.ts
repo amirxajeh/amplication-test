@@ -27,6 +27,9 @@ import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserUpdateInput } from "./UserUpdateInput";
 import { User } from "./User";
+import { LanguageFindManyArgs } from "../../language/base/LanguageFindManyArgs";
+import { Language } from "../../language/base/Language";
+import { LanguageWhereUniqueInput } from "../../language/base/LanguageWhereUniqueInput";
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class UserControllerBase {
@@ -189,5 +192,108 @@ export class UserControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "Language",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/languages")
+  @ApiNestedQuery(LanguageFindManyArgs)
+  async findManyLanguages(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<Language[]> {
+    const query = plainToClass(LanguageFindManyArgs, request.query);
+    const results = await this.service.findLanguages(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        description: true,
+        id: true,
+
+        name: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/languages")
+  async connectLanguages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: LanguageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      languages: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/languages")
+  async updateLanguages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: LanguageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      languages: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/languages")
+  async disconnectLanguages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: LanguageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      languages: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

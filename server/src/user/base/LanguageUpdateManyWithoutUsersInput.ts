@@ -10,58 +10,35 @@ https://docs.amplication.com/docs/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { InputType, Field } from "@nestjs/graphql";
+import { LanguageWhereUniqueInput } from "../../language/base/LanguageWhereUniqueInput";
 import { ApiProperty } from "@nestjs/swagger";
-import { SortOrder } from "../../util/SortOrder";
-
-@InputType({
-  isAbstract: true,
-  description: undefined,
-})
-class LanguageOrderByInput {
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @Field(() => SortOrder, {
+@InputType()
+class LanguageUpdateManyWithoutUsersInput {
+  @Field(() => [LanguageWhereUniqueInput], {
     nullable: true,
   })
-  createdAt?: SortOrder;
-
   @ApiProperty({
     required: false,
-    enum: ["asc", "desc"],
+    type: () => [LanguageWhereUniqueInput],
   })
-  @Field(() => SortOrder, {
+  connect?: Array<LanguageWhereUniqueInput>;
+
+  @Field(() => [LanguageWhereUniqueInput], {
     nullable: true,
   })
-  description?: SortOrder;
-
   @ApiProperty({
     required: false,
-    enum: ["asc", "desc"],
+    type: () => [LanguageWhereUniqueInput],
   })
-  @Field(() => SortOrder, {
+  disconnect?: Array<LanguageWhereUniqueInput>;
+
+  @Field(() => [LanguageWhereUniqueInput], {
     nullable: true,
   })
-  id?: SortOrder;
-
   @ApiProperty({
     required: false,
-    enum: ["asc", "desc"],
+    type: () => [LanguageWhereUniqueInput],
   })
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  nameId?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  updatedAt?: SortOrder;
+  set?: Array<LanguageWhereUniqueInput>;
 }
-
-export { LanguageOrderByInput };
+export { LanguageUpdateManyWithoutUsersInput };

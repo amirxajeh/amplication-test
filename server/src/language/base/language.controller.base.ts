@@ -46,12 +46,24 @@ export class LanguageControllerBase {
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
   async create(@common.Body() data: LanguageCreateInput): Promise<Language> {
     return await this.service.create({
-      data: data,
+      data: {
+        ...data,
+
+        name: {
+          connect: data.name,
+        },
+      },
       select: {
         createdAt: true,
         description: true,
         id: true,
-        name: true,
+
+        name: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -75,7 +87,13 @@ export class LanguageControllerBase {
         createdAt: true,
         description: true,
         id: true,
-        name: true,
+
+        name: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -100,7 +118,13 @@ export class LanguageControllerBase {
         createdAt: true,
         description: true,
         id: true,
-        name: true,
+
+        name: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -129,12 +153,24 @@ export class LanguageControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          name: {
+            connect: data.name,
+          },
+        },
         select: {
           createdAt: true,
           description: true,
           id: true,
-          name: true,
+
+          name: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -167,7 +203,13 @@ export class LanguageControllerBase {
           createdAt: true,
           description: true,
           id: true,
-          name: true,
+
+          name: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
